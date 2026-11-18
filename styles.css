@@ -1,0 +1,680 @@
+/* =========================================================
+   styles.css — só o que o Tailwind não cobre facilmente:
+   moldura do celular, transições, chips, mapa, toast etc.
+   ========================================================= */
+
+:root {
+  --creme: #FFF8EE;
+  --caramelo: #E8892B;
+  --caramelo-escuro: #C96F17;
+  --caramelo-claro: #FFF3E4;
+  --marrom: #3B2A1E;
+  --marrom-medio: #8B5A33;
+  --verde: #2E9E5B;
+  --verde-claro: #E8F6EE;
+}
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Poppins', system-ui, sans-serif;
+  background: #E9E1D6;
+  color: var(--marrom);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Moldura do celular ---------- */
+#palco {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* No celular de verdade: o app ocupa a tela toda */
+.celular {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--creme);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.barra-status, .ilha, .indicador-home { display: none; }
+
+/* Área rolável das telas */
+#conteudo {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  scrollbar-width: none;
+}
+#conteudo::-webkit-scrollbar { display: none; }
+
+/* No desktop: mostra o app dentro de uma "moldura de celular" */
+@media (min-width: 520px) {
+  body { background: radial-gradient(circle at 30% 20%, #F7F0E7 0%, #DCD1C3 100%); }
+  #palco { height: 100vh; overflow: hidden; }
+
+  .celular {
+    width: 390px;
+    height: 844px;
+    flex-shrink: 0;
+    border-radius: 54px;
+    box-shadow:
+      0 0 0 11px #1E1714,
+      0 0 0 13px #4A3D35,
+      0 40px 90px rgba(60, 40, 20, .35);
+    transform-origin: center center;
+  }
+
+  /* "Ilha" preta no topo, como num celular moderno */
+  .ilha {
+    display: block;
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    width: 118px;
+    height: 34px;
+    margin-left: -59px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 60;
+  }
+
+  .barra-status {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    height: 54px;
+    padding: 6px 34px 0 40px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--marrom);
+    background: var(--creme);
+    transition: background .3s;
+  }
+
+  /* Tracinho inferior (indicador de "home" do celular) */
+  .indicador-home {
+    display: block;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    width: 134px;
+    height: 5px;
+    margin-left: -67px;
+    border-radius: 3px;
+    background: #1E1714;
+    z-index: 60;
+  }
+  #nav-inferior { padding-bottom: 22px; }
+}
+
+/* A barra de status acompanha a cor do topo de cada tela */
+.celular[data-tela="home"] .barra-status { background: #FDE3C3; }
+
+/* ---------- Telas e transição entre elas ---------- */
+.tela { display: none; }
+.tela.ativa {
+  display: block;
+  animation: entrarTela .35s ease both;
+}
+#tela-mapa.ativa {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+@keyframes entrarTela {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Cabeçalho fixo no topo das telas */
+.cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 248, 238, .94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 10px 20px 12px;
+}
+
+/* ---------- Botões ---------- */
+.botao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 18px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s;
+  cursor: pointer;
+  user-select: none;
+}
+.botao:active { transform: scale(.97); }
+.botao-principal {
+  background: var(--caramelo);
+  color: #fff;
+  box-shadow: 0 8px 20px -6px rgba(232, 137, 43, .65);
+}
+.botao-principal:hover { background: var(--caramelo-escuro); }
+.botao-secundario {
+  background: #fff;
+  color: var(--marrom);
+  border: 1.5px solid #EBD9C4;
+}
+.botao-secundario:hover { border-color: var(--caramelo); }
+.botao-verde {
+  background: var(--verde);
+  color: #fff;
+  box-shadow: 0 8px 20px -6px rgba(46, 158, 91, .6);
+}
+.botao-verde:hover { background: #23824A; }
+.botao:disabled {
+  background: #D8CCBF;
+  color: #fff;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.passo {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--caramelo-claro);
+  color: var(--caramelo-escuro);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Emojis que flutuam na tela inicial */
+.flutuar { animation: flutuar 4s ease-in-out infinite; }
+@keyframes flutuar {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50%      { transform: translateY(-10px) rotate(4deg); }
+}
+
+/* ---------- Alternador Lista / Mapa ---------- */
+.alternador {
+  flex-shrink: 0;
+  display: flex;
+  background: #F1E6DA;
+  border-radius: 999px;
+  padding: 3px;
+}
+.alternador a {
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--marrom-medio);
+  transition: background .2s, color .2s;
+}
+.alternador a.ativo {
+  background: #fff;
+  color: var(--marrom);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+
+/* ---------- Chips de filtro ---------- */
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 -20px;
+  padding: 2px 20px;
+  scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1.5px solid #EBD9C4;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--marrom);
+  transition: all .2s ease;
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--caramelo); }
+.chip.ativo {
+  background: var(--marrom);
+  border-color: var(--marrom);
+  color: #fff;
+}
+.chip[data-filtro="doacao"].ativo {
+  background: var(--verde);
+  border-color: var(--verde);
+}
+
+/* ---------- Cards de oferta ---------- */
+.card {
+  transition: transform .18s ease, box-shadow .18s ease;
+  animation: aparecerCard .35s ease backwards;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -10px rgba(92, 58, 30, .35);
+}
+.card:active { transform: scale(.98); }
+@keyframes aparecerCard {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Mapa simulado ---------- */
+.mapa {
+  position: relative;
+  flex: 1;
+  min-height: 420px;
+  overflow: hidden;
+  margin: 0 12px 12px;
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 1px rgba(92, 58, 30, .08);
+}
+.mapa-fundo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Pino de oferta: etiqueta com emoji + preço e uma "pontinha" embaixo */
+.pino {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px 4px 6px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
+  cursor: pointer;
+  z-index: 2;
+  transition: scale .2s ease, box-shadow .2s;
+  animation: pinoCair .45s cubic-bezier(.3, 1.5, .5, 1) both;
+}
+.pino span:first-child { font-size: 14px; }
+.pino::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-bottom: 0;
+  border-top-color: inherit;
+}
+.pino-doacao { background: var(--verde); border-color: var(--verde); }
+.pino-venda  { background: var(--caramelo); border-color: var(--caramelo); }
+.pino:hover { scale: 1.08; z-index: 4; }
+.pino.selecionado {
+  scale: 1.18;
+  z-index: 5;
+  box-shadow: 0 0 0 3px #fff, 0 6px 16px rgba(0, 0, 0, .3);
+}
+.pino-doacao.selecionado { background: #1F7A44; border-color: #1F7A44; }
+.pino-venda.selecionado  { background: #B85F0E; border-color: #B85F0E; }
+@keyframes pinoCair {
+  from { opacity: 0; translate: 0 -14px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* "Você está aqui" */
+.pino-voce {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  pointer-events: none;
+}
+.pino-voce .ponto {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2F7BF5;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+}
+.pino-voce .pulso {
+  position: absolute;
+  left: 50%;
+  top: 9px;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  background: rgba(47, 123, 245, .35);
+  animation: pulsar 2s ease-out infinite;
+}
+.pino-voce .rotulo {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: #fff;
+  color: #2F7BF5;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+}
+@keyframes pulsar {
+  from { transform: scale(1); opacity: 1; }
+  to   { transform: scale(4.5); opacity: 0; }
+}
+
+/* Mini card do mapa */
+.mapa-card {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 10;
+  display: none;
+}
+.mapa-card.aberto {
+  display: block;
+  animation: subirCard .3s cubic-bezier(.2, 1.2, .4, 1) both;
+}
+@keyframes subirCard {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Detalhe da oferta ---------- */
+.rodape-fixo {
+  position: sticky;
+  bottom: 0;
+  z-index: 15;
+  background: linear-gradient(to top, var(--creme) 75%, rgba(255, 248, 238, 0));
+  padding: 18px 20px 14px;
+}
+.barra-restante {
+  height: 6px;
+  border-radius: 99px;
+  background: #F1E6DA;
+  overflow: hidden;
+}
+.barra-restante > div {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--caramelo);
+  transition: width .5s ease;
+}
+
+/* ---------- Reserva confirmada ---------- */
+.check-sucesso {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--verde);
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  box-shadow: 0 0 0 10px var(--verde-claro);
+  animation: popCheck .5s cubic-bezier(.3, 1.6, .5, 1) both;
+}
+.check-sucesso path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: desenharCheck .4s .35s ease forwards;
+}
+@keyframes popCheck {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+@keyframes desenharCheck { to { stroke-dashoffset: 0; } }
+
+.codigo-retirada {
+  border: 2px dashed #E9C99F;
+  background: #fff;
+}
+
+/* Confetes simples na confirmação */
+.confete {
+  position: absolute;
+  top: -10px;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: cairConfete 1.6s ease-in forwards;
+  pointer-events: none;
+}
+@keyframes cairConfete {
+  0%   { opacity: 1; transform: translateY(0) rotate(0); }
+  100% { opacity: 0; transform: translateY(320px) rotate(540deg); }
+}
+
+/* ---------- Formulário da padaria ---------- */
+.rotulo-campo {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--marrom-medio);
+  margin-bottom: 6px;
+}
+.campo {
+  width: 100%;
+  border: 1.5px solid #EBD9C4;
+  background: #FFFCF8;
+  border-radius: 14px;
+  padding: 11px 13px;
+  font-size: 14px;
+  color: var(--marrom);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.campo::placeholder { color: #C9B39C; }
+.campo:focus {
+  border-color: var(--caramelo);
+  box-shadow: 0 0 0 4px rgba(232, 137, 43, .15);
+}
+.campo.erro { border-color: #D9534F; animation: tremer .3s; }
+@keyframes tremer {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.prefixo-rs {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--marrom-medio);
+}
+
+/* Botões de opção (categoria, tipo, horário) */
+.opcao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 14px;
+  border: 1.5px solid #EBD9C4;
+  background: #FFFCF8;
+  font-size: 22px;
+  transition: all .2s ease;
+  cursor: pointer;
+}
+.opcao small { font-size: 10.5px; font-weight: 500; color: var(--marrom-medio); }
+.opcao-linha {
+  flex-direction: row;
+  justify-content: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 10px 6px;
+  color: var(--marrom);
+}
+.opcao:hover { border-color: var(--caramelo); }
+.opcao.ativo {
+  border-color: var(--caramelo);
+  background: var(--caramelo-claro);
+  box-shadow: 0 0 0 1px var(--caramelo);
+}
+.opcao.ativo[data-tipo="doacao"] {
+  border-color: var(--verde);
+  background: var(--verde-claro);
+  box-shadow: 0 0 0 1px var(--verde);
+  color: #1F7A44;
+}
+
+/* Campo de preço aparecendo/sumindo suavemente */
+#bloco-preco { transition: opacity .25s ease; }
+#bloco-preco.escondido { display: none; }
+#bloco-preco:not(.escondido) { animation: aparecerCard .3s ease both; }
+
+/* Contador − 3 + */
+.contador-qtd {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #F6EDE2;
+  border-radius: 14px;
+  padding: 4px;
+}
+.contador-qtd button {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--caramelo-escuro);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+  transition: transform .1s;
+}
+.contador-qtd button:active { transform: scale(.9); }
+.contador-qtd span {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* Status dos anúncios */
+.status {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.status-disponivel { background: var(--verde-claro); color: #1F7A44; }
+.status-reservado  { background: #FFF0D9; color: #B0630F; }
+.status-retirado   { background: #EFEAE5; color: #8C7F74; }
+
+.destaque-novo { animation: brilhar 1.6s ease; }
+@keyframes brilhar {
+  0%   { box-shadow: 0 0 0 0 rgba(232, 137, 43, .7); }
+  100% { box-shadow: 0 0 0 14px rgba(232, 137, 43, 0); }
+}
+
+/* ---------- Barra de navegação inferior ---------- */
+#nav-inferior {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #fff;
+  border-top: 1px solid #F1E6DA;
+  padding: 8px 6px 10px;
+  z-index: 30;
+}
+#nav-inferior a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #A8927C;
+  transition: color .2s;
+}
+#nav-inferior svg {
+  width: 40px;
+  height: 28px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: background .2s;
+}
+#nav-inferior a:hover { color: var(--caramelo); }
+#nav-inferior a.ativo { color: var(--caramelo-escuro); font-weight: 600; }
+#nav-inferior a.ativo svg { background: var(--caramelo-claro); }
+
+/* ---------- Toast ---------- */
+#toasts {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+@media (min-width: 520px) { #toasts { top: 60px; } }
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 11px 16px;
+  border-radius: 16px;
+  background: var(--marrom);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+  animation: toastEntrar .35s cubic-bezier(.2, 1.3, .4, 1) both;
+}
+.toast-sucesso { background: #23824A; }
+.toast-erro    { background: #C0392B; }
+.toast.saindo  { animation: toastSair .3s ease forwards; }
+@keyframes toastEntrar {
+  from { opacity: 0; transform: translateY(-20px) scale(.95); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes toastSair {
+  to { opacity: 0; transform: translateY(-12px); }
+}
+
+/* Respeita quem prefere menos animação */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
