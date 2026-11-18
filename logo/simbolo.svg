@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180" width="440" height="492"><g transform="translate(0 -12)">
+  <defs>
+    <linearGradient id="s-pao" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F3A954"/><stop offset="1" stop-color="#C96F17"/>
+    </linearGradient>
+    <linearGradient id="s-mao" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3DB56D"/><stop offset="1" stop-color="#1F7A44"/>
+    </linearGradient>
+    <!-- recorte: abre um respiro transparente entre o pão e as mãos -->
+    <mask id="s-recorte" maskUnits="userSpaceOnUse" x="0" y="0" width="200" height="200">
+      <rect width="200" height="200" fill="#fff"/>
+      <path d="M97 176 C64 175 32 160 18 130 C14 121 24 113 32 119 C46 137 68 149 97 151 Z" fill="#000" stroke="#000" stroke-width="9" stroke-linejoin="round"/>
+      <path d="M103 176 C136 175 168 160 182 130 C186 121 176 113 168 119 C154 137 132 149 103 151 Z" fill="#000" stroke="#000" stroke-width="9" stroke-linejoin="round"/>
+    </mask>
+  </defs>
+  <g mask="url(#s-recorte)">
+    <path d="M38 118 C38 93 68 80 100 80 C132 80 162 93 162 118 C162 134 136 141 100 141 C64 141 38 134 38 118 Z" fill="url(#s-pao)"/>
+    <path d="M58 96 C72 86 88 84 100 84" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+    <path d="M62 104 C80 88 120 88 138 104 C120 97 80 97 62 104 Z" fill="#FCE3BC" stroke="#E9A55A" stroke-width="1.5"/>
+  </g>
+  <path d="M97 176 C64 175 32 160 18 130 C14 121 24 113 32 119 C46 137 68 149 97 151 Z" fill="url(#s-mao)"/>
+  <path d="M103 176 C136 175 168 160 182 130 C186 121 176 113 168 119 C154 137 132 149 103 151 Z" fill="url(#s-mao)"/>
+  <path d="M100 64 C86 54 74 45 74 33 C74 24 81 18 89 18 C94 18 98 21 100 25 C102 21 106 18 111 18 C119 18 126 24 126 33 C126 45 114 54 100 64 Z" fill="#E0603A" transform="translate(0 8)"/>
+  <path d="M84 36 C84 33 86 31 89 31" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/></g></svg>
