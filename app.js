@@ -213,7 +213,7 @@ function htmlCardOferta(oferta, indice) {
   const esgotado = oferta.quantidade <= 0;
   const restam = esgotado
     ? '<span class="font-semibold text-marrom-300">esgotado</span>'
-    : '<span class="font-semibold ' + (oferta.quantidade <= 2 ? 'text-red-500' : 'text-caramelo-600') + '">restam ' + oferta.quantidade + '</span>';
+    : '<span class="font-semibold ' + (oferta.quantidade <= 2 ? 'text-coral-500' : 'text-caramelo-600') + '">restam ' + oferta.quantidade + '</span>';
   const selosNovo = oferta.nova
     ? '<span class="text-[9px] font-bold bg-caramelo-500 text-white px-1.5 py-0.5 rounded-md ml-1 align-middle">NOVO</span>'
     : '';
@@ -396,7 +396,9 @@ function renderizarDetalhe(id) {
       '<div class="flex items-center justify-between px-4">' +
         '<button type="button" onclick="voltar()" class="w-10 h-10 rounded-full bg-white/90 shadow-sm grid place-items-center text-lg text-marrom-700 hover:bg-white" aria-label="Voltar">←</button>' +
         '<span class="text-[12px] font-semibold text-marrom-700">Detalhes da oferta</span>' +
-        '<button type="button" onclick="mostrarToast(\'❤️ Salvo nos favoritos\')" class="w-10 h-10 rounded-full bg-white/90 shadow-sm grid place-items-center hover:bg-white" aria-label="Favoritar">🤍</button>' +
+        '<button type="button" onclick="favoritar(this)" class="botao-favorito w-10 h-10 rounded-full bg-white/90 shadow-sm grid place-items-center hover:bg-white" aria-label="Favoritar">' +
+          '<svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>' +
+        '</button>' +
       '</div>' +
       '<div class="text-[88px] text-center mt-3 leading-none flutuar">' + oferta.emoji + '</div>' +
     '</div>' +
@@ -446,6 +448,12 @@ function renderizarDetalhe(id) {
 
     // Botão fixo no rodapé
     '<div class="rodape-fixo">' + botao + '</div>';
+}
+
+// Coração de favoritar (só visual), na cor coral da marca
+function favoritar(botao) {
+  const ligado = botao.classList.toggle('ativo');
+  mostrarToast(ligado ? '❤️ Salvo nos favoritos' : 'Removido dos favoritos');
 }
 
 // Faz a reserva: diminui a quantidade e vai para a confirmação
@@ -582,9 +590,9 @@ function gerarQRCode(texto) {
     '<svg viewBox="0 0 ' + n + ' ' + n + '" width="100%" height="100%" shape-rendering="crispEdges">' +
       '<g fill="#3B2A1E">' + quadrados + '</g>' +
       olho(0, 0) + olho(0, n - 7) + olho(n - 7, 0) +
-      // Logo no meio do QR
-      '<rect x="9.5" y="9.5" width="6" height="6" rx="1.5" fill="#fff"/>' +
-      '<text x="12.5" y="14.2" text-anchor="middle" font-size="4.6">🥖</text>' +
+      // Símbolo da marca no meio do QR
+      '<rect x="9" y="9" width="7" height="7" rx="1.6" fill="#fff"/>' +
+      '<image href="logo/simbolo.svg" x="9.4" y="9.4" width="6.2" height="6.2"/>' +
     '</svg>'
   );
 }
@@ -752,7 +760,7 @@ function renderizarPadaria(idDestaque) {
       '</div>' +
       // Conquista
       '<div class="flex items-center gap-3 bg-white/15 rounded-2xl p-3 mt-4">' +
-        '<div class="w-11 h-11 rounded-full bg-white grid place-items-center text-2xl shadow">🏅</div>' +
+        '<div class="w-12 h-12 rounded-full bg-white grid place-items-center shadow"><img src="logo/simbolo.svg" alt="" class="w-9"></div>' +
         '<div class="flex-1">' +
           '<p class="text-[13px] font-semibold">Selo "Doador de Alimentos"</p>' +
           '<p class="text-[10.5px] text-white/80">Conquista desbloqueada este mês!</p>' +
@@ -845,6 +853,25 @@ function iniciar() {
 
   ajustarMoldura();
   navegar();
+  mostrarAbertura();
+}
+
+// Tela de abertura com a logo: some sozinha depois de ~2 s (ou ao clicar)
+function mostrarAbertura() {
+  const abertura = document.getElementById('abertura');
+  let fechada = false;
+
+  function fechar() {
+    if (fechada) return;
+    fechada = true;
+    abertura.classList.add('sumindo');
+    setTimeout(function () { abertura.remove(); }, 450);
+    // Os contadores da tela inicial animam depois que a abertura some
+    if (estado.rotaAtual === 'home') animarContadores();
+  }
+
+  abertura.addEventListener('click', fechar);
+  setTimeout(fechar, 1900);
 }
 
 iniciar();

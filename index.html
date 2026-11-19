@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Pão pra Todos — Demo</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥖</text></svg>">
+  <!-- Ícone da aba do navegador (identidade visual em logo/) -->
+  <link rel="icon" type="image/svg+xml" href="logo/icone-app.svg">
+  <link rel="apple-touch-icon" href="logo/icone-app.png">
+  <meta name="theme-color" content="#FFF8EE">
 
   <!-- Fonte Poppins (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +26,7 @@
             caramelo: { 50: '#FFF3E4', 100: '#FDE3C3', 200: '#F9CB93', 400: '#F0A04B', 500: '#E8892B', 600: '#C96F17', 700: '#9C5410' },
             marrom: { 100: '#F1E6DA', 300: '#C9A27E', 500: '#8B5A33', 700: '#5C3A1E', 900: '#3B2A1E' },
             doacao: { 50: '#E8F6EE', 100: '#CDEDD9', 500: '#2E9E5B', 600: '#23824A' },
+            coral: { 50: '#FDECE6', 500: '#E0603A', 600: '#C94E2A' },
           },
           fontFamily: { sans: ['Poppins', 'system-ui', 'sans-serif'] },
         },
@@ -37,6 +41,12 @@
     <!-- ===== Moldura do celular ===== -->
     <div id="celular" class="celular" data-tela="home">
       <div class="ilha"></div>
+
+      <!-- Tela de abertura com a logo (some sozinha em ~2 s ou ao clicar) -->
+      <div id="abertura" class="abertura">
+        <img src="logo/logo-vertical.svg" alt="Pão pra Todos" class="abertura-logo">
+        <div class="abertura-barra"><div></div></div>
+      </div>
 
       <!-- Barra de status (só aparece na moldura, no desktop) -->
       <div class="barra-status">
@@ -64,7 +74,7 @@
             <span class="flutuar absolute top-32 right-20 text-3xl" style="animation-delay:.8s">🍩</span>
             <span class="flutuar absolute top-48 right-4 text-3xl" style="animation-delay:1.6s">🍞</span>
 
-            <div class="text-xl font-extrabold text-marrom-700 tracking-tight">🥖 Pão pra Todos</div>
+            <img src="logo/logo-compacta.svg" alt="Pão pra Todos" class="h-11 w-auto">
 
             <h1 class="mt-12 text-[30px] leading-[1.15] font-bold text-marrom-900 pr-16">
               Comida boa não é lixo.<br>
@@ -104,7 +114,7 @@
           </div>
 
           <!-- Como funciona -->
-          <div class="px-6 mt-7 pb-8">
+          <div class="px-6 mt-7">
             <h2 class="text-[11px] font-semibold uppercase tracking-widest text-marrom-500">Como funciona</h2>
             <ol class="mt-3 space-y-2.5">
               <li class="flex items-center gap-3 bg-white rounded-2xl p-3 shadow-sm">
@@ -120,6 +130,12 @@
                 <p class="text-[13px] text-marrom-700"><b>Retira no horário</b> combinado mostrando seu código.</p>
               </li>
             </ol>
+          </div>
+
+          <!-- Assinatura da marca no fim da tela inicial -->
+          <div class="flex flex-col items-center gap-2 pt-8 pb-8">
+            <img src="logo/simbolo.svg" alt="" class="w-12 opacity-90">
+            <p class="text-[10.5px] font-semibold uppercase tracking-[0.25em] text-marrom-300">Comida boa não é lixo</p>
           </div>
         </section>
 
